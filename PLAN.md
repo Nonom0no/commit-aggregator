@@ -20,14 +20,14 @@
   - [x] `src/lib/cn.ts`, `parse-repo-url.ts`, `conventional.ts`, `date-range.ts`, `schema.ts`, `markdown.ts`, `rate-limit.ts`
   - [x] Unit test Vitest untuk helper (`parseRepoUrl`, `parseConventional`, `date-range`, `buildMarkdown`, `rate-limit`)
 
-- [ ] **Fase 3: Backend API Commit Route Handler**
-  - [ ] `src/lib/github.ts` (`server-only`)
-  - [ ] `src/app/api/commits/route.ts`
-  - [ ] Verifikasi endpoint POST /api/commits
+- [x] **Fase 3: Backend API Commit Route Handler**
+  - [x] `src/lib/github.ts` (`server-only`)
+  - [x] `src/app/api/commits/route.ts`
+  - [x] Verifikasi endpoint POST /api/commits
 
-- [ ] **Fase 4: UI Design System Base & Floating Navbar**
-  - [ ] Component UI: `Badge`, `Button`, `Card`, `Input`, `Skeleton`, `Alert`
-  - [ ] Component Layout: `FloatingNavbar`
+- [x] **Fase 4: UI Design System Base & Floating Navbar**
+  - [x] Component UI: `Badge`, `Button`, `Card`, `Input`, `Skeleton`, `Alert`
+  - [x] Component Layout: `FloatingNavbar`
 
 - [ ] **Fase 5: Form Input Commit (`CommitForm`)**
   - [ ] `RepoInputList`, `DateRangePicker`, `PrivateRepoField`, `CommitForm`

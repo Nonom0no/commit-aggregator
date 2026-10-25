@@ -15,10 +15,10 @@
   - [x] Konfigurasi font Plus Jakarta Sans & background `bg-rose-50`
   - [x] Verifikasi `npm run lint` & `npm run build`
 
-- [ ] **Fase 2: Tipe Data, Schema Validation & Lib Utilities**
-  - [ ] `src/types/commit.ts`
-  - [ ] `src/lib/cn.ts`, `parse-repo-url.ts`, `conventional.ts`, `date-range.ts`, `schema.ts`, `markdown.ts`, `rate-limit.ts`
-  - [ ] Unit test Vitest untuk helper
+- [x] **Fase 2: Tipe Data, Schema Validation & Lib Utilities**
+  - [x] `src/types/commit.ts`
+  - [x] `src/lib/cn.ts`, `parse-repo-url.ts`, `conventional.ts`, `date-range.ts`, `schema.ts`, `markdown.ts`, `rate-limit.ts`
+  - [x] Unit test Vitest untuk helper (`parseRepoUrl`, `parseConventional`, `date-range`, `buildMarkdown`, `rate-limit`)
 
 - [ ] **Fase 3: Backend API Commit Route Handler**
   - [ ] `src/lib/github.ts` (`server-only`)

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-jakarta);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   
   /* Design tokens - Colors */
@@ -89,12 +89,29 @@
 
 /* Focus visible */
 .focus-visible-ring {
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-rose-50;
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-rose-400);
+  ring-offset: 2px;
+  ring-offset-color: var(--color-rose-50);
+}
+.focus-visible-ring:focus-visible {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-rose-400);
+  ring-offset: 2px;
+  ring-offset-color: var(--color-rose-50);
 }
 
 /* Transitions respecting prefers-reduced-motion */
 .transition-all-reduced {
-  @apply transition-all duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none;
+  transition: all 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .transition-all-reduced {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* Scrollbar hide for mobile */

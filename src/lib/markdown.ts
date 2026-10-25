@@ -1,5 +1,6 @@
 import type { CommitsResponse } from "@/types/commit";
 import { formatInTimeZone } from "date-fns-tz";
+import { id } from "date-fns/locale";
 
 const TIMEZONE = "Asia/Jakarta";
 
@@ -13,8 +14,8 @@ function formatTime(dateStr: string): string {
 function formatDateRange(since: string, until: string): string {
   const sinceDate = new Date(since);
   const untilDate = new Date(until);
-  const sinceStr = formatInTimeZone(sinceDate, TIMEZONE, "dd MMM yyyy");
-  const untilStr = formatInTimeZone(untilDate, TIMEZONE, "dd MMM yyyy");
+  const sinceStr = formatInTimeZone(sinceDate, TIMEZONE, "dd MMM yyyy", { locale: id });
+  const untilStr = formatInTimeZone(untilDate, TIMEZONE, "dd MMM yyyy", { locale: id });
   return sinceStr === untilStr ? sinceStr : `${sinceStr} – ${untilStr}`;
 }
 
@@ -60,7 +61,7 @@ export function buildMarkdown(response: CommitsResponse, options: { groupBy: Gro
   const sections: string[] = [];
   for (const [repoFullName, repoCommits] of grouped) {
     const repo = repoCommits[0].repo;
-    const header = `### ${repo.fullName} (${repoCommits.length} commit${repoCommits.length !== 1 ? "s" : ""})`;
+    const header = `### ${repo.fullName} (${repoCommits.length} commit)`;
     const lines = repoCommits.map((c) => formatCommitLine(c, false));
     sections.push(`${header}\n${lines.join("\n")}`);
   }

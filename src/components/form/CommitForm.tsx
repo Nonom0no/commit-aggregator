@@ -36,11 +36,11 @@ export function CommitForm({ onSubmit }: CommitFormProps) {
   const isCustomDateValid = (preset: DatePreset, from: string, to: string): boolean => {
     if (preset !== "custom") return true;
     if (!from || !to) return false;
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return false;
+    const fromDate = Date.parse(from);
+    const toDate = Date.parse(to);
+    if (isNaN(fromDate) || isNaN(toDate)) return false;
     if (fromDate > toDate) return false;
-    const diffMs = toDate.getTime() - fromDate.getTime();
+    const diffMs = toDate - fromDate;
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
     if (diffDays > 31) return false;
     return true;

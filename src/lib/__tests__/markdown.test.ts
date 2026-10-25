@@ -47,7 +47,7 @@ describe("buildMarkdown", () => {
       const response = createMockResponse([commit]);
       const markdown = buildMarkdown(response, { groupBy: "repo" });
 
-      expect(markdown).toContain("## Laporan Commit — 25 Oct 2026");
+      expect(markdown).toContain("## Laporan Commit — 25 Okt 2026");
       expect(markdown).toContain("### owner/frontend-repo (1 commit)");
       expect(markdown).toContain("- **feat(auth):** add login page — [`a1b2c3d`](https://github.com/owner/frontend-repo/commit/a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0) (09.41)");
     });
@@ -79,7 +79,7 @@ describe("buildMarkdown", () => {
       response.meta.repoCount = 2;
       const markdown = buildMarkdown(response, { groupBy: "repo" });
 
-      expect(markdown).toContain("### owner/frontend-repo (2 commits)");
+      expect(markdown).toContain("### owner/frontend-repo (2 commit)");
       expect(markdown).toContain("- **feat(auth):** add login page — [`a1b2c3d`](https://github.com/owner/frontend-repo/commit/a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0) (09.41)");
       expect(markdown).toContain("- **fix:** handle logout redirect — [`e4f5a6b`](https://github.com/owner/frontend-repo/commit/e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3) (10.15)");
       expect(markdown).toContain("### owner/backend-repo (1 commit)");
@@ -112,7 +112,7 @@ describe("buildMarkdown", () => {
       const response = createMockResponse([]);
       const markdown = buildMarkdown(response, { groupBy: "repo" });
 
-      expect(markdown).toBe("## Laporan Commit — 25 Oct 2026\n\nBelum ada commit pada rentang ini.");
+      expect(markdown).toBe("## Laporan Commit — 25 Okt 2026\n\nBelum ada commit pada rentang ini.");
     });
 
     it("sorts commits by date descending (newest first) within each repo group", () => {
@@ -190,7 +190,7 @@ describe("buildMarkdown", () => {
       response.meta.until = "2026-10-25T16:59:59Z";
       const markdown = buildMarkdown(response);
 
-      expect(markdown).toContain("## Laporan Commit — 25 Oct 2026");
+      expect(markdown).toContain("## Laporan Commit — 25 Okt 2026");
     });
 
     it("shows range for multi-day", () => {
@@ -200,7 +200,7 @@ describe("buildMarkdown", () => {
       response.meta.until = "2026-10-25T16:59:59Z";
       const markdown = buildMarkdown(response);
 
-      expect(markdown).toContain("## Laporan Commit — 20 Oct 2026 – 25 Oct 2026");
+      expect(markdown).toContain("## Laporan Commit — 20 Okt 2026 – 25 Okt 2026");
     });
   });
 

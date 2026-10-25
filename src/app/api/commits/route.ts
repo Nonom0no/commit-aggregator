@@ -1,7 +1,9 @@
+import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { commitsRequestSchema } from "@/lib/schema";
 import { createOctokit, fetchRepoCommits, mapCommitsToResponse } from "@/lib/github";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { parseRepoUrl } from "@/lib/parse-repo-url";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const ip = getClientIp(request.headers);
@@ -36,7 +38,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const results = await Promise.allSettled(
     repos.map(async (repoUrl) => {
-      const { owner, repo } = parseRepoUrlFromInput(repoUrl);
+      const { owner, repo } = parseRepoUrl(repoUrl);
       const result = await fetchRepoCommits(octokit, { owner, repo, since, until, author });
       return { commits: result.commits, error: result.error, repo: repoUrl };
     })
@@ -55,13 +57,4 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       "X-RateLimit-Remaining": remaining.toString(),
     },
   });
-}
-
-function parseRepoUrlFromInput(input: string): { owner: string; repo: string } {
-  const trimmed = input.trim();
-  const urlMatch = trimmed.match(/^https?:\/\/(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/);
-  if (urlMatch) return { owner: urlMatch[1], repo: urlMatch[2] };
-  const shorthandMatch = trimmed.match(/^([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)$/);
-  if (shorthandMatch) return { owner: shorthandMatch[1], repo: shorthandMatch[2] };
-  throw new Error("Format URL tidak valid");
 }

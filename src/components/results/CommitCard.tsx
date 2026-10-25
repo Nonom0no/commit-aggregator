@@ -7,34 +7,24 @@ import { CommitTypeBadge } from "./CommitTypeBadge";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import type { CommitItem } from "@/types/commit";
+import { formatInTimeZone } from "date-fns-tz";
 
 interface CommitCardProps {
   commit: CommitItem;
 }
+
+const TIMEZONE = "Asia/Jakarta";
 
 export function CommitCard({ commit }: CommitCardProps) {
   const [showFullBody, setShowFullBody] = useState(false);
   const hasBody = commit.body && commit.body.trim().length > 0;
 
   const formatTime = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    return date.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-      timeZone: "Asia/Jakarta",
-    }).replace(":", ".");
+    const timestamp = Date.parse(dateStr);
+    return formatInTimeZone(timestamp, TIMEZONE, "HH.mm");
   };
 
-  const formatDate = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      timeZone: "Asia/Jakarta",
-    });
-  };
+  // formatDate not needed for UI
 
   const displayTitle = commit.conventional?.description || commit.title;
   const displayBody = commit.body;

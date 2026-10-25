@@ -36,11 +36,11 @@ describe("github.ts", () => {
   });
 
   describe("mapOctokitError", () => {
-    it("maps 404 to NOT_FOUND_OR_NO_ACCESS", () => {
+    it("maps 404 to NOT_FOUND_OR_NO_ACCESS with updated message", () => {
       const error = { status: 404, response: { status: 404 } };
       const result = mapOctokitError(error, "owner/repo");
       expect(result.code).toBe("NOT_FOUND_OR_NO_ACCESS");
-      expect(result.message).toBe("Repo tidak ditemukan atau token tidak punya akses.");
+      expect(result.message).toBe("Repo tidak ditemukan, atau token tidak punya akses (cek scope repo dan authorize SSO bila perlu).");
       expect(result.repo).toBe("owner/repo");
     });
 
@@ -51,11 +51,25 @@ describe("github.ts", () => {
       expect(result.message).toBe("Token tidak valid atau sudah kedaluwarsa.");
     });
 
-    it("maps 403 to RATE_LIMITED", () => {
-      const error = { status: 403 };
+    it("maps 403 with rate limit header to RATE_LIMITED", () => {
+      const error = { status: 403, response: { status: 403, headers: { "x-ratelimit-remaining": "0" } } };
       const result = mapOctokitError(error, "owner/repo");
       expect(result.code).toBe("RATE_LIMITED");
       expect(result.message).toBe("Batas permintaan GitHub tercapai. Coba lagi nanti.");
+    });
+
+    it("maps 403 with rate limit in message to RATE_LIMITED", () => {
+      const error = { status: 403, message: "rate limit exceeded" };
+      const result = mapOctokitError(error, "owner/repo");
+      expect(result.code).toBe("RATE_LIMITED");
+      expect(result.message).toBe("Batas permintaan GitHub tercapai. Coba lagi nanti.");
+    });
+
+    it("maps 403 without rate limit indicators to NOT_FOUND_OR_NO_ACCESS", () => {
+      const error = { status: 403, response: { status: 403, headers: { "x-ratelimit-remaining": "100" } } };
+      const result = mapOctokitError(error, "owner/repo");
+      expect(result.code).toBe("NOT_FOUND_OR_NO_ACCESS");
+      expect(result.message).toBe("Repo tidak ditemukan, atau token tidak punya akses (cek scope repo dan authorize SSO bila perlu).");
     });
 
     it("maps 429 to RATE_LIMITED", () => {

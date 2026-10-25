@@ -87,22 +87,6 @@
   left: -50px;
 }
 
-/* Focus visible */
-.focus-visible-ring {
-  outline: none;
-  ring: 2px;
-  ring-color: var(--color-rose-400);
-  ring-offset: 2px;
-  ring-offset-color: var(--color-rose-50);
-}
-.focus-visible-ring:focus-visible {
-  outline: none;
-  ring: 2px;
-  ring-color: var(--color-rose-400);
-  ring-offset: 2px;
-  ring-offset-color: var(--color-rose-50);
-}
-
 /* Transitions respecting prefers-reduced-motion */
 .transition-all-reduced {
   transition: all 200ms ease-out;

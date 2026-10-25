@@ -2,11 +2,16 @@
 
 import { cn } from "@/lib/cn";
 import { CalendarDays } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { getPresetRange, getDefaultRange, type DatePreset, type DateRange } from "@/lib/date-range";
+import { formatInTimeZone } from "date-fns-tz";
+
+function getTodayWib(): string {
+  return formatInTimeZone(Date.now(), "Asia/Jakarta", "yyyy-MM-dd");
+}
 
 interface DateRangePickerProps {
   preset: DatePreset;
@@ -39,12 +44,12 @@ export function DateRangePicker({ preset, customFrom, customTo, onChange, onRang
     onChange("custom", value, customTo);
     if (value && customTo) {
       if (!isCustomValid(value, customTo)) {
-        const fromDate = new Date(value);
-        const toDate = new Date(customTo);
+        const fromDate = Date.parse(value);
+        const toDate = Date.parse(customTo);
         if (fromDate > toDate) {
           setCustomFromError("Tanggal mulai tidak boleh setelah tanggal akhir");
         } else {
-          const diffMs = toDate.getTime() - fromDate.getTime();
+          const diffMs = toDate - fromDate;
           const diffDays = diffMs / (1000 * 60 * 60 * 24);
           if (diffDays > 31) {
             setCustomToError("Rentang tanggal maksimal 31 hari");
@@ -62,12 +67,12 @@ export function DateRangePicker({ preset, customFrom, customTo, onChange, onRang
     onChange("custom", customFrom, value);
     if (customFrom && value) {
       if (!isCustomValid(customFrom, value)) {
-        const fromDate = new Date(customFrom);
-        const toDate = new Date(value);
+        const fromDate = Date.parse(customFrom);
+        const toDate = Date.parse(value);
         if (fromDate > toDate) {
           setCustomFromError("Tanggal mulai tidak boleh setelah tanggal akhir");
         } else {
-          const diffMs = toDate.getTime() - fromDate.getTime();
+          const diffMs = toDate - fromDate;
           const diffDays = diffMs / (1000 * 60 * 60 * 24);
           if (diffDays > 31) {
             setCustomToError("Rentang tanggal maksimal 31 hari");
@@ -83,11 +88,11 @@ export function DateRangePicker({ preset, customFrom, customTo, onChange, onRang
 
   const isCustomValid = (from: string, to: string): boolean => {
     if (!from || !to) return false;
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return false;
+    const fromDate = Date.parse(from);
+    const toDate = Date.parse(to);
+    if (isNaN(fromDate) || isNaN(toDate)) return false;
     if (fromDate > toDate) return false;
-    const diffMs = toDate.getTime() - fromDate.getTime();
+    const diffMs = toDate - fromDate;
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
     if (diffDays > 31) return false;
     return true;
@@ -139,9 +144,7 @@ export function DateRangePicker({ preset, customFrom, customTo, onChange, onRang
             value={customFrom}
             onChange={(e) => handleCustomFromChange(e.target.value)}
             error={customFromError}
-            min={new Date("2020-01-01").toISOString().split("T")[0]}
-            max={new Date().toISOString().split("T")[0]}
-            id="custom-from"
+            min="2020-01-01" max={getTodayWib()}            id="custom-from"
           />
           <Input
             label="Sampai"
@@ -149,8 +152,8 @@ export function DateRangePicker({ preset, customFrom, customTo, onChange, onRang
             value={customTo}
             onChange={(e) => handleCustomToChange(e.target.value)}
             error={customToError}
-            min={customFrom || new Date("2020-01-01").toISOString().split("T")[0]}
-            max={new Date().toISOString().split("T")[0]}
+            min={customFrom || "2020-01-01"}
+            max={getTodayWib()}
             id="custom-to"
           />
         </div>

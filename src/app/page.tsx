@@ -1,7 +1,21 @@
 import { GitBranch, CalendarDays, Copy, GitMerge } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { GeneratorSection } from "@/components/GeneratorSection";
+import { Suspense } from "react";
+
+const GeneratorFallback = () => (
+  <Card variant="default" padding="lg" className="rounded-3xl">
+    <CardContent className="space-y-4">
+      <Skeleton className="h-6 w-1/3" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-12 w-32" />
+    </CardContent>
+  </Card>
+);
 
 export default function Home() {
   return (
@@ -18,7 +32,9 @@ export default function Home() {
 
       {/* Generator Form */}
       <section id="generator" className="px-4 sm:px-6 max-w-4xl mx-auto pb-16 scroll-mt-28">
-        <GeneratorSection />
+        <Suspense fallback={<GeneratorFallback />}>
+          <GeneratorSection />
+        </Suspense>
       </section>
 
       {/* How to Use Section */}

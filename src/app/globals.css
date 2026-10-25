@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-jakarta);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* Design tokens - Colors */
+  --color-rose-50: #fff1f2;
+  --color-rose-100: #ffe4e6;
+  --color-rose-200: #fecdd3;
+  --color-rose-500: #f43f5e;
+  --color-rose-600: #e11d48;
+  --color-rose-700: #be123c;
+  
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-900: #0f172a;
+  
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-700: #047857;
+  
+  --color-red-50: #fef2f2;
+  --color-red-200: #fecaca;
+  --color-red-700: #b91c1c;
+  
+  --color-sky-50: #f0f9ff;
+  --color-sky-200: #bae6fd;
+  --color-sky-700: #0369a1;
+  
+  --color-violet-50: #f5f3ff;
+  --color-violet-200: #ddd6fe;
+  --color-violet-700: #6d28d9;
+  
+  --color-amber-50: #fffbeb;
+  --color-amber-200: #fde68a;
+  --color-amber-700: #b45309;
+  
+  --color-orange-50: #fff7ed;
+  --color-orange-200: #fed7aa;
+  --color-orange-700: #c2410c;
+  
+  --color-teal-50: #f0fdfa;
+  --color-teal-200: #99f6e4;
+  --color-teal-700: #0f766e;
+  
+  --color-indigo-50: #eef2ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-700: #4338ca;
+  
+  --color-pink-100: #fce7f3;
+  
+  /* Custom shadows */
+  --shadow-card: 0 8px 30px rgba(244, 63, 94, 0.08);
+  --shadow-card-hover: 0 12px 40px rgba(244, 63, 94, 0.14);
+  --shadow-button-primary: 0 10px 25px -5px rgba(244, 63, 94, 0.25), 0 8px 10px -6px rgba(244, 63, 94, 0.1);
+}
+
+/* Background decorative blobs */
+.bg-decorative-blobs::before,
+.bg-decorative-blobs::after {
+  content: "";
+  position: fixed;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: -10;
+  filter: blur(128px);
+}
+
+.bg-decorative-blobs::before {
+  width: 400px;
+  height: 400px;
+  background: rgba(244, 63, 94, 0.15);
+  top: -100px;
+  right: -100px;
+}
+
+.bg-decorative-blobs::after {
+  width: 300px;
+  height: 300px;
+  background: rgba(236, 72, 153, 0.15);
+  bottom: -50px;
+  left: -50px;
+}
+
+/* Focus visible */
+.focus-visible-ring {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-rose-400);
+  ring-offset: 2px;
+  ring-offset-color: var(--color-rose-50);
+}
+.focus-visible-ring:focus-visible {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-rose-400);
+  ring-offset: 2px;
+  ring-offset-color: var(--color-rose-50);
+}
+
+/* Transitions respecting prefers-reduced-motion */
+.transition-all-reduced {
+  transition: all 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .transition-all-reduced {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Scrollbar hide for mobile */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

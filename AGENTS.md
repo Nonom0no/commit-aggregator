@@ -502,9 +502,9 @@ npm install @octokit/rest zod lucide-react clsx server-only
 ```
 
 **Langkah 3 — Fondasi styling**
-1. Di `layout.tsx`, muat Plus Jakarta Sans dengan `next/font/google` (`variable: "--font-sans"`, `subsets: ["latin"]`), pasang class variabel pada `<html>` dan gunakan `font-sans` pada `<body>`.
+1. Di `layout.tsx`, muat Plus Jakarta Sans dengan `next/font/google` (`variable: "--font-jakarta"`, `subsets: ["latin"]`), pasang class variabel pada `<html>` dan gunakan `font-sans` pada `<body>`.
 2. Pasang `bg-rose-50 text-slate-900 antialiased` pada `<body>`.
-3. Di `globals.css`, pastikan font sans Tailwind menunjuk ke `--font-sans` (ikuti cara konfigurasi sesuai versi Tailwind yang dibuat `create-next-app`: `@theme` untuk v4, atau `tailwind.config` untuk v3).
+3. Di `globals.css`, pastikan font sans Tailwind menunjuk ke `var(--font-jakarta)` di dalam `@theme inline { --font-sans: var(--font-jakarta); }`. **Tailwind v4 butuh `postcss.config.mjs` dengan plugin `@tailwindcss/postcss`** agar `@theme` dan `@apply` diproses.
 4. Tambahkan dekorasi latar (dua blob blur rose) di `layout.tsx` atau `page.tsx`.
 
 **Langkah 4 — Tipe & util**
@@ -546,3 +546,13 @@ Tandai semua poin berikut sebelum menyatakan selesai:
 - [ ] Navbar pill mengambang dengan backdrop blur; semua kartu `rounded-2xl`/`rounded-3xl`; semua tombol dan badge `rounded-full`; palet rose/slate konsisten.
 - [ ] Tampilan nyaman di mobile (360px) dan desktop.
 - [ ] `npm run lint` dan `npm run build` lulus.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

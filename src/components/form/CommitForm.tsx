@@ -15,12 +15,10 @@ import type { CommitsRequest, CommitsResponse } from "@/types/commit";
 type Status = "idle" | "loading" | "success" | "error";
 
 interface CommitFormProps {
-  onSuccess: (data: CommitsResponse) => void;
-  onError: (error: string) => void;
-  onLoading: (isLoading: boolean) => void;
+  onSubmit: (payload: CommitsRequest) => Promise<void>;
 }
 
-export function CommitForm({ onSuccess, onError, onLoading }: CommitFormProps) {
+export function CommitForm({ onSubmit }: CommitFormProps) {
   const [repos, setRepos] = useState<string[]>(["", ""]);
   const [preset, setPreset] = useState<DatePreset>("today");
   const [customFrom, setCustomFrom] = useState<string>("");
@@ -54,7 +52,7 @@ export function CommitForm({ onSuccess, onError, onLoading }: CommitFormProps) {
     // range updated in picker
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!hasValidRepos) {
@@ -72,7 +70,6 @@ export function CommitForm({ onSuccess, onError, onLoading }: CommitFormProps) {
 
     setStatus("loading");
     setFormError(null);
-    onLoading(true);
 
     let dateRange: DateRange;
     try {
@@ -81,8 +78,6 @@ export function CommitForm({ onSuccess, onError, onLoading }: CommitFormProps) {
       const msg = err instanceof Error ? err.message : "Rentang tanggal tidak valid.";
       setFormError(msg);
       setStatus("error");
-      onLoading(false);
-      onError(msg);
       return;
     }
 
@@ -98,28 +93,8 @@ export function CommitForm({ onSuccess, onError, onLoading }: CommitFormProps) {
     }
 
     try {
-      const response = await fetch("/api/commits", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-        signal: abortController.signal,
-      });
-
-      if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error("Terlalu banyak permintaan, coba lagi sebentar.");
-        }
-
-        const errData = await response.json().catch(() => ({}));
-        const message = errData.error || "Gagal mengambil commit dari server.";
-        throw new Error(message);
-      }
-
-      const data: CommitsResponse = await response.json();
+      await onSubmit(payload);
       setStatus("success");
-      onSuccess(data);
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         return;
@@ -127,15 +102,14 @@ export function CommitForm({ onSuccess, onError, onLoading }: CommitFormProps) {
       const message = err instanceof Error ? err.message : "Terjadi kesalahan jaringan. Silakan coba lagi.";
       setStatus("error");
       setFormError(message);
-      onError(message);
     } finally {
-      onLoading(false);
+      // loading state handled by parent
     }
   };
 
   return (
     <Card variant="default" padding="lg" className="rounded-3xl">
-      <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+      <form onSubmit={handleFormSubmit} className="space-y-8" noValidate>
         {/* Repositories */}
         <RepoInputList repos={repos} onChange={setRepos} />
 

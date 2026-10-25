@@ -36,8 +36,8 @@ describe("date-range", () => {
       expect(range.label).toBe("19 Okt 2026 – 25 Okt 2026");
     });
 
-    it("returns custom range with provided dates", () => {
-      const range = getPresetRange("custom", "2026-10-20T00:00:00+07:00", "2026-10-22T00:00:00+07:00");
+    it("returns custom range with provided dates in YYYY-MM-DD format (WIB)", () => {
+      const range = getPresetRange("custom", "2026-10-20", "2026-10-22");
       expect(range.since).toBe("2026-10-20T00:00:00+07:00");
       expect(range.until).toBe("2026-10-22T23:59:59+07:00");
       expect(range.label).toBe("20 Okt 2026 – 22 Okt 2026");
@@ -48,8 +48,25 @@ describe("date-range", () => {
     });
 
     it("single day custom range shows single date label", () => {
-      const range = getPresetRange("custom", "2026-10-20T00:00:00+07:00", "2026-10-20T00:00:00+07:00");
+      const range = getPresetRange("custom", "2026-10-20", "2026-10-20");
+      expect(range.since).toBe("2026-10-20T00:00:00+07:00");
+      expect(range.until).toBe("2026-10-20T23:59:59+07:00");
       expect(range.label).toBe("20 Okt 2026");
+    });
+
+    it("custom range treats input as WIB local date, not UTC (timezone bug fix)", () => {
+      // This test verifies the fix: input "2026-10-25" should produce WIB dates,
+      // not shift by one day due to UTC parsing
+      const range = getPresetRange("custom", "2026-10-25", "2026-10-25");
+      expect(range.since).toBe("2026-10-25T00:00:00+07:00");
+      expect(range.until).toBe("2026-10-25T23:59:59+07:00");
+    });
+
+    it("multi-day custom range treats input as WIB local dates", () => {
+      const range = getPresetRange("custom", "2026-10-20", "2026-10-25");
+      expect(range.since).toBe("2026-10-20T00:00:00+07:00");
+      expect(range.until).toBe("2026-10-25T23:59:59+07:00");
+      expect(range.label).toBe("20 Okt 2026 – 25 Okt 2026");
     });
   });
 

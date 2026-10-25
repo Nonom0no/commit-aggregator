@@ -178,13 +178,14 @@ commit-aggregator/
     │   │   ├── CommitTypeBadge.tsx
     │   │   ├── RepoGroupHeader.tsx
     │   │   └── CopyMarkdownButton.tsx
-    │   └── ui/
-    │       ├── Badge.tsx
-    │       ├── Button.tsx
-    │       ├── Card.tsx
-    │       ├── Input.tsx
-    │       ├── Skeleton.tsx
-    │       └── Alert.tsx
+    │   ├── ui/
+    │   │   ├── Badge.tsx
+    │   │   ├── Button.tsx
+    │   │   ├── Card.tsx
+    │   │   ├── Input.tsx
+    │   │   ├── Skeleton.tsx
+    │   │   └── Alert.tsx
+    │   └── GeneratorSection.tsx
     ├── lib/
     │   ├── github.ts             # factory Octokit + fetch commit (SERVER ONLY)
     │   ├── parse-repo-url.ts     # URL -> { owner, repo }

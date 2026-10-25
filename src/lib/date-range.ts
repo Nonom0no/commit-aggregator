@@ -26,6 +26,14 @@ function formatLabelRange(from: Date, to: Date): string {
   return fromStr === toStr ? fromStr : `${fromStr} – ${toStr}`;
 }
 
+/** Parse a YYYY-MM-DD string as a local date in the target timezone (not UTC) */
+function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  // Create date at noon in the target timezone to avoid DST edge cases
+  // This is interpreted as local time in the timezone
+  return new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+}
+
 export function getPresetRange(preset: DatePreset, customFrom?: string, customTo?: string): DateRange {
   const now = new Date();
   const today = toZonedTime(now, TIMEZONE);
@@ -64,8 +72,8 @@ export function getPresetRange(preset: DatePreset, customFrom?: string, customTo
       if (!customFrom || !customTo) {
         throw new Error("Rentang kustom memerlukan customFrom dan customTo");
       }
-      const start = toZonedTime(new Date(customFrom), TIMEZONE);
-      const end = toZonedTime(new Date(customTo), TIMEZONE);
+      const start = toZonedTime(parseLocalDate(customFrom), TIMEZONE);
+      const end = toZonedTime(parseLocalDate(customTo), TIMEZONE);
       const startOfDayDate = startOfDay(start);
       const endOfDayDate = endOfDay(end);
       return {

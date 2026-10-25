@@ -29,8 +29,9 @@
   - [x] Component UI: `Badge`, `Button`, `Card`, `Input`, `Skeleton`, `Alert`
   - [x] Component Layout: `FloatingNavbar`
 
-- [ ] **Fase 5: Form Input Commit (`CommitForm`)**
-  - [ ] `RepoInputList`, `DateRangePicker`, `PrivateRepoField`, `CommitForm`
+- [x] **Fase 5: Form Input Commit (`CommitForm`)**
+  - [x] `RepoInputList`, `DateRangePicker`, `PrivateRepoField`, `CommitForm`
+  - [x] `src/components/GeneratorSection.tsx`
 
 - [ ] **Fase 6: Panel Hasil Commit & Ekspor Markdown (`ResultsPanel`)**
   - [ ] `CommitTypeBadge`, `CommitCard`, `RepoGroupHeader`, `CopyMarkdownButton`, `ResultsPanel`

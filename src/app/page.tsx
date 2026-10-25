@@ -1,6 +1,7 @@
 import { GitBranch, CalendarDays, Copy, GitMerge } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { GeneratorSection } from "@/components/GeneratorSection";
 
 export default function Home() {
   return (
@@ -15,24 +16,9 @@ export default function Home() {
         </p>
       </section>
 
-      {/* Generator Form - placeholder */}
+      {/* Generator Form */}
       <section id="generator" className="px-4 sm:px-6 max-w-4xl mx-auto pb-16 scroll-mt-28">
-        <Card variant="default" padding="lg">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-slate-900 mb-6">Generator (Coming Soon)</h2>
-            <p className="text-slate-600">Form input repositori, rentang tanggal, dan token privat akan ditampilkan di sini.</p>
-          </div>
-        </Card>
-      </section>
-
-      {/* Results Panel - placeholder */}
-      <section className="px-4 sm:px-6 max-w-4xl mx-auto pb-16 scroll-mt-28">
-        <Card variant="default" padding="lg">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-slate-900 mb-6">Hasil Commit (Coming Soon)</h2>
-            <p className="text-slate-600">Panel hasil commit dengan tombol Copy as Markdown akan ditampilkan di sini.</p>
-          </div>
-        </Card>
+        <GeneratorSection />
       </section>
 
       {/* How to Use Section */}

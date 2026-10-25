@@ -160,6 +160,9 @@ commit-aggregator/
     ├── app/
     │   ├── layout.tsx            # font, metadata, <FloatingNavbar />
     │   ├── page.tsx              # halaman tunggal: hero + generator + hasil
+    │   ├── not-found.tsx         # 404 page (Client Component)
+    │   ├── error.tsx             # error page (Client Component)
+    │   ├── icon.svg              # favicon
     │   ├── globals.css           # Tailwind + background dekoratif
     │   └── api/
     │       └── commits/

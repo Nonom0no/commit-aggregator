@@ -33,11 +33,12 @@
   - [x] `RepoInputList`, `DateRangePicker`, `PrivateRepoField`, `CommitForm`
   - [x] `src/components/GeneratorSection.tsx`
 
-- [ ] **Fase 6: Panel Hasil Commit & Ekspor Markdown (`ResultsPanel`)**
-  - [ ] `CommitTypeBadge`, `CommitCard`, `RepoGroupHeader`, `CopyMarkdownButton`, `ResultsPanel`
-  - [ ] Rakit `src/app/page.tsx`
+- [x] **Fase 6: Panel Hasil Commit & Ekspor Markdown (`ResultsPanel`)**
+  - [x] `CommitTypeBadge`, `CommitCard`, `RepoGroupHeader`, `CopyMarkdownButton`, `ResultsPanel`
+  - [x] Rakit `src/app/page.tsx`
 
-- [ ] **Fase 7: Polesan Akhir, Keamanan & Build Verification**
-  - [ ] Security headers & CSP di `next.config.ts`
-  - [ ] `README.md`, `.env.example`
-  - [ ] Verifikasi mobile (360px) & audit keamanan token
+- [x] **Fase 7: Polesan Akhir, Keamanan & Build Verification**
+  - [x] Security headers & CSP di `next.config.ts`
+  - [x] `README.md`, `.env.example`
+  - [x] Halaman pendukung `not-found.tsx`, `error.tsx`, `icon.svg`
+  - [x] Verifikasi mobile (360px) & audit keamanan token

@@ -14,13 +14,16 @@ export function FloatingNavbar() {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4" role="banner">
+    <header
+      className="fixed inset-x-0 top-4 z-50 flex justify-center px-4"
+      role="banner"
+    >
       <nav
         aria-label="Navigasi utama"
         className={cn(
           "flex items-center gap-1 rounded-full border border-rose-200/70 bg-white/60 px-2 py-2",
           "shadow-[0_8px_30px_rgba(244,63,94,0.10)] backdrop-blur-xl",
-          "transition-all duration-200 ease-out motion-reduce:transition-none"
+          "transition-all duration-200 ease-out motion-reduce:transition-none",
         )}
       >
         {/* Logo / Brand */}
@@ -49,7 +52,7 @@ export function FloatingNavbar() {
 
         {/* GitHub Link */}
         <a
-          href="https://github.com"
+          href="https://github.com/Nonom0no/commit-aggregator"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center rounded-full px-3 py-2 text-slate-500 hover:text-rose-600 hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-rose-50"
@@ -67,7 +70,11 @@ export function FloatingNavbar() {
           aria-controls="mobile-menu"
           aria-label={mobileMenuOpen ? "Tutup menu" : "Buka menu"}
         >
-          {mobileMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          {mobileMenuOpen ? (
+            <X className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          )}
         </button>
       </nav>
 
@@ -92,7 +99,7 @@ export function FloatingNavbar() {
               </Link>
             ))}
             <a
-              href="https://github.com"
+              href="https://github.com/Nonom0no/commit-aggregator"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 rounded-full px-4 py-3 text-sm font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-100"

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { parseConventional, isKnownConventionalType } from "../conventional";
 
 describe("parseConventional", () => {
+  // --- Strict pattern tests (existing behavior) ---
   it("parses basic feat commit", () => {
     const result = parseConventional("feat: add login page");
     expect(result).toEqual({
@@ -132,7 +133,7 @@ describe("parseConventional", () => {
     });
   });
 
-  it("parses unknown type that matches pattern", () => {
+  it("parses unknown type that matches strict pattern", () => {
     const result = parseConventional("custom(scope): do something");
     expect(result).toEqual({
       type: "custom",
@@ -142,13 +143,7 @@ describe("parseConventional", () => {
     });
   });
 
-  it("returns null for non-conventional commit", () => {
-    expect(parseConventional("add login page")).toBeNull();
-    expect(parseConventional("Fix bug in login")).toBeNull();
-    expect(parseConventional("")).toBeNull();
-  });
-
-  it("parses WIP as conventional type (matches pattern)", () => {
+  it("parses WIP as conventional type (matches strict pattern)", () => {
     const result = parseConventional("WIP: working on feature");
     expect(result).toEqual({
       type: "wip",
@@ -158,7 +153,128 @@ describe("parseConventional", () => {
     });
   });
 
-  it("returns null for malformed conventional", () => {
+  // --- Loose pattern tests (new behavior for 11 known types) ---
+  describe("loose pattern - without space after colon", () => {
+    it("parses feat:blabla", () => {
+      const result = parseConventional("feat:blabla");
+      expect(result).toEqual({
+        type: "feat",
+        scope: null,
+        breaking: false,
+        description: "blabla",
+      });
+    });
+
+    it("parses fix(api):blabla", () => {
+      const result = parseConventional("fix(api):blabla");
+      expect(result).toEqual({
+        type: "fix",
+        scope: "api",
+        breaking: false,
+        description: "blabla",
+      });
+    });
+
+    it("parses feat!:blabla", () => {
+      const result = parseConventional("feat!:blabla");
+      expect(result).toEqual({
+        type: "feat",
+        scope: null,
+        breaking: true,
+        description: "blabla",
+      });
+    });
+
+    it("parses FEAT: x (case insensitive)", () => {
+      const result = parseConventional("FEAT: x");
+      expect(result).toEqual({
+        type: "feat",
+        scope: null,
+        breaking: false,
+        description: "x",
+      });
+    });
+  });
+
+  describe("loose pattern - without colon, space separated", () => {
+    it("parses feat blabla", () => {
+      const result = parseConventional("feat blabla");
+      expect(result).toEqual({
+        type: "feat",
+        scope: null,
+        breaking: false,
+        description: "blabla",
+      });
+    });
+
+    it("parses fix(api) blabla", () => {
+      const result = parseConventional("fix(api) blabla");
+      expect(result).toEqual({
+        type: "fix",
+        scope: "api",
+        breaking: false,
+        description: "blabla",
+      });
+    });
+
+    it("parses feat! blabla", () => {
+      const result = parseConventional("feat! blabla");
+      expect(result).toEqual({
+        type: "feat",
+        scope: null,
+        breaking: true,
+        description: "blabla",
+      });
+    });
+
+    it("parses Fix bug in login (case insensitive, loose)", () => {
+      const result = parseConventional("Fix bug in login");
+      // NOTE: This now parses as loose "fix" type.
+      // Previously returned null (strict required colon+space).
+      // Change is intentional per Fase 8 requirement (g).
+      expect(result).toEqual({
+        type: "fix",
+        scope: null,
+        breaking: false,
+        description: "bug in login",
+      });
+    });
+  });
+
+  // --- Null cases (should NOT match loose pattern) ---
+  it("returns null for feature x (not a known type prefix)", () => {
+    expect(parseConventional("feature x")).toBeNull();
+  });
+
+  it("returns null for tests x (not a known type prefix)", () => {
+    expect(parseConventional("tests x")).toBeNull();
+  });
+
+  it("returns null for fixing bug (not a known type prefix)", () => {
+    expect(parseConventional("fixing bug")).toBeNull();
+  });
+
+  it("returns null for https://x.com (URL not a commit type)", () => {
+    expect(parseConventional("https://x.com")).toBeNull();
+  });
+
+  it("returns null for Note:x (unknown type)", () => {
+    expect(parseConventional("Note:x")).toBeNull();
+  });
+
+  it("returns null for feat (no description)", () => {
+    expect(parseConventional("feat")).toBeNull();
+  });
+
+  it("returns null for feat: (empty description after colon)", () => {
+    expect(parseConventional("feat:")).toBeNull();
+  });
+
+  it("returns null for feat   (only whitespace after type)", () => {
+    expect(parseConventional("feat   ")).toBeNull();
+  });
+
+  it("returns null for malformed conventional (strict)", () => {
     expect(parseConventional("feat:")).toBeNull();
     expect(parseConventional("feat")).toBeNull();
     expect(parseConventional("feat():")).toBeNull();
@@ -172,6 +288,14 @@ describe("parseConventional", () => {
       breaking: false,
       description: "add login",
     });
+  });
+
+  it("returns null for empty string", () => {
+    expect(parseConventional("")).toBeNull();
+  });
+
+  it("returns null for add login page (no type prefix)", () => {
+    expect(parseConventional("add login page")).toBeNull();
   });
 });
 

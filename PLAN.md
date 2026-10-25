@@ -42,3 +42,13 @@
   - [x] `README.md`, `.env.example`
   - [x] Halaman pendukung `not-found.tsx`, `error.tsx`, `icon.svg`
   - [x] Verifikasi mobile (360px) & audit keamanan token
+
+- [x] **Fase 8: Perbaikan Merge Sisa & Parser Conventional Longgar**
+  - [x] (a) PrivateRepoField label PAT + teks bantuan classic/SSO
+  - [x] (b) README & AGENTS.md: PAT classic atau fine-grained
+  - [x] (c) Pesan 404/403 github.ts + tes cabang 403
+  - [x] (d) Schema test token ghp_/github_pat_ + >255 char
+  - [x] (e) error.tsx tanpa klaim "Tim kami sudah diberitahu"
+  - [x] (f) Header Markdown "(N commit)" tanpa "s"
+  - [x] (g) Parser longgar conventional.ts + tes (strict + loose pattern)
+  - [x] Update AGENTS.md bagian 4.6 & PLAN.md

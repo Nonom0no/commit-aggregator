@@ -92,7 +92,7 @@ Dilarang memakai warna di luar keluarga rose/pink/slate kecuali untuk badge tipe
 
 **Tipografi**
 
-- Font: Plus Jakarta Sans, dimuat lewat `next/font/google` dengan `variable: "--font-sans"`, dan dipasang sebagai font `sans` default.
+- Font: Plus Jakarta Sans, dimuat lewat `next/font/google` dengan `variable: "--font-jakarta"`, dan dipasang sebagai font `sans` default. Tailwind `--font-sans` menunjuk ke `var(--font-jakarta)`.
 - Judul halaman: `text-4xl md:text-5xl font-bold tracking-tight text-slate-900`.
 - Judul seksi/kartu: `text-xl font-semibold text-slate-900`.
 - Isi: `text-base text-slate-600`, lebar baris maksimal `max-w-prose` untuk paragraf.
@@ -226,7 +226,7 @@ export interface CommitsRequest {
   repos: string[];              // 1–10 URL GitHub, mis. "https://github.com/owner/repo"
   since: string;                // ISO 8601 dengan offset, mis. "2026-10-25T00:00:00+07:00"
   until: string;                // ISO 8601 dengan offset
-  token?: string;               // Fine-grained PAT; hanya dikirim bila "Repository Privat" dicentang
+  token?: string;               // PAT (classic atau fine-grained); hanya dikirim bila "Repository Privat" dicentang
   author?: string;              // opsional: username GitHub untuk memfilter commit
   timezone?: string;            // default "Asia/Jakarta"
 }
@@ -309,11 +309,22 @@ Jika SEMUA repo gagal, tetap kembalikan 200 dengan `commits: []` dan `errors` te
 
 ### 4.6 Konvensi Conventional Commit (`lib/conventional.ts`)
 
-Regex acuan: `^(\w+)(?:\(([^)]+)\))?(!)?:\s(.+)$`
+Parser menerima dua bentuk:
 
-- Tipe dikenali: `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`. Tipe lain yang cocok pola tetap di-parse tetapi diberi gaya badge netral.
-- `breaking = true` bila ada `!` sebelum `:` atau body memuat `BREAKING CHANGE:`.
-- Jika tidak cocok, kembalikan `null` (commit tampil biasa tanpa badge tipe).
+**Bentuk strict** (tipe apa pun):
+```
+^(\w+)(?:\(([^)]+)\))?(!)?:\s(.+)$
+```
+Contoh: `feat: add login`, `fix(auth): handle error`, `WIP: refactor`.
+
+**Bentuk longgar** (hanya 11 tipe dikenal: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`; tidak peka huruf besar-kecil):
+- Tanpa spasi setelah titik dua: `feat:blabla`, `fix(api):blabla`, `feat!:blabla`
+- Tanpa titik dua, dipisah spasi: `feat blabla`, `fix(api) blabla`, `feat! blabla`
+- Batas kata wajib: tipe diikuti spasi, titik dua, kurung, atau `!`. Oleh itu `feature x`, `tests x`, `fixing bug` **tidak** terdeteksi.
+- Deskripsi hasil `trim()` tidak boleh kosong (`feat`, `feat:`, `feat   ` → `null`).
+- Hasil dinormalisasi: type huruf kecil, scope, breaking, description. Dengan begitu `CommitCard` dan output Markdown otomatis rapi.
+
+Jika tidak cocok bentuk mana pun, kembalikan `null`.
 
 ---
 
@@ -346,11 +357,10 @@ Kartu putih `rounded-3xl border border-rose-200 p-6 md:p-8` dengan shadow rose l
 
 **C. `PrivateRepoField`**
 - Checkbox kustom berlabel "Repository Privat". Gunakan `<input type="checkbox">` asli (untuk aksesibilitas) dengan styling `accent-rose-500` atau varian pill/switch.
-- Saat dicentang, tampilkan (dengan transisi tinggi halus) input **password** untuk "Fine-grained Personal Access Token":
+- Saat dicentang, tampilkan (dengan transisi tinggi halus) input **password** untuk "Personal Access Token (PAT)":
   - `type="password"`, `autoComplete="off"`, `spellCheck={false}`, `name` tanpa kata yang memicu penyimpanan oleh password manager bila memungkinkan.
   - Tombol mata (`Eye`/`EyeOff`) untuk menampilkan/menyembunyikan.
-  - Teks bantuan `text-sm text-slate-500`: "Token hanya dipakai untuk satu permintaan ini dan tidak disimpan. Buat fine-grained token dengan izin baca **Contents** dan **Metadata** pada repo yang dibutuhkan." Sertakan tautan ke halaman pembuatan token GitHub.
-  - Catatan kecil: fine-grained token hanya berlaku untuk satu pemilik (user/org). Bila repo berasal dari pemilik berbeda, tampilkan pesan error per repo dan sarankan membuat token terpisah lalu generate ulang.
+  - Teks bantuan `text-sm text-slate-500`: "Token hanya dipakai untuk satu permintaan ini dan tidak disimpan. Classic token butuh scope `repo` untuk repo privat; fine-grained butuh izin baca Contents dan Metadata dan hanya berlaku untuk satu pemilik; bila organisasi memakai SSO, token classic harus di-authorize untuk organisasi itu. Peringatan: classic dengan scope repo punya akses luas: gunakan masa berlaku pendek dan hapus setelah selesai." Sertakan tautan ke halaman pembuatan token classic GitHub (https://github.com/settings/tokens).
 - Saat checkbox dimatikan, kosongkan nilai token dari state.
 
 **D. Tombol Submit**
@@ -454,7 +464,7 @@ Aturan:
 
 ### 6.1 Aturan Token (KRUSIAL — tidak boleh dilanggar)
 
-1. PAT **TIDAK BOLEH** bocor ke browser. Setelah diketik pengguna, token hanya dikirim sekali lewat body POST ke `/api/commits` dan **tidak pernah** dikembalikan dalam response (juga tidak dalam pesan error).
+1. PAT (classic atau fine-grained) **TIDAK BOLEH** bocor ke browser. Setelah diketik pengguna, token hanya dikirim sekali lewat body POST ke `/api/commits` dan **tidak pernah** dikembalikan dalam response (juga tidak dalam pesan error).
 2. PAT hanya diproses di Route Handler `app/api/commits/route.ts` (dan `lib/github.ts` yang diimpor darinya). Tidak boleh ada kode di komponen client yang memanggil `api.github.com` secara langsung.
 3. PAT **TIDAK BOLEH** disimpan di database, `localStorage`, `sessionStorage`, cookie, IndexedDB, atau file di server.
 4. **DILARANG** memakai prefix `NEXT_PUBLIC_` untuk variabel apa pun yang berkaitan dengan token GitHub. Pada versi ini tidak ada variabel environment untuk token; jangan membuat fallback `process.env.GITHUB_TOKEN`.
@@ -486,7 +496,7 @@ Tambahkan di `next.config.ts` (`headers()`): `X-Content-Type-Options: nosniff`, 
 - Tangani semua jalur error; tidak ada promise tanpa penanganan.
 - Jalankan `npm run lint` dan `npm run build` tanpa error sebelum menyatakan pekerjaan selesai.
 - `.gitignore` wajib memuat `.env*` (kecuali `.env.example`), `node_modules`, `.next`.
-- `README.md` singkat: cara menjalankan, cara membuat fine-grained PAT, dan pernyataan privasi (token tidak disimpan).
+- `README.md` singkat: cara menjalankan, cara membuat PAT (classic atau fine-grained), dan pernyataan privasi (token tidak disimpan).
 
 ---
 

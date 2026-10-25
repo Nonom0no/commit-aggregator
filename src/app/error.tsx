@@ -22,7 +22,7 @@ export default function Error({
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Terjadi kesalahan</h1>
             <p className="mt-2 text-slate-600">
-              Maaf, terjadi kesalahan yang tidak terduga. Tim kami sudah diberitahu.
+              Maaf, terjadi kesalahan yang tidak terduga. Coba muat ulang halaman. Jika masih terjadi, coba lagi nanti.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -2,6 +2,7 @@ import "server-only";
 import { Octokit } from "@octokit/rest";
 import type { CommitItem, ParsedConventional, RepoError } from "@/types/commit";
 import { parseConventional } from "./conventional";
+import { parseRepoUrl } from "./parse-repo-url";
 
 export function createOctokit(token?: string): Octokit {
   return new Octokit({ auth: token || undefined });
@@ -69,19 +70,30 @@ export async function fetchRepoCommits(
 
 export function mapOctokitError(err: unknown, repo: string): RepoError {
   const status = (err as { status?: number }).status ?? (err as { response?: { status?: number } }).response?.status;
+  const headers = (err as { response?: { headers?: Record<string, string> } }).response?.headers ?? {};
 
   let code: RepoError["code"] = "UNKNOWN";
   let message = "Gagal mengambil commit dari repo ini.";
 
   if (status === 404) {
     code = "NOT_FOUND_OR_NO_ACCESS";
-    message = "Repo tidak ditemukan atau token tidak punya akses.";
+    message = "Repo tidak ditemukan, atau token tidak punya akses (cek scope repo dan authorize SSO bila perlu).";
   } else if (status === 401) {
     code = "UNAUTHORIZED";
     message = "Token tidak valid atau sudah kedaluwarsa.";
-  } else if (status === 403 || status === 429) {
+  } else if (status === 429) {
     code = "RATE_LIMITED";
     message = "Batas permintaan GitHub tercapai. Coba lagi nanti.";
+  } else if (status === 403) {
+    const ratelimitRemaining = headers["x-ratelimit-remaining"];
+    const errorMessage = (err as { message?: string }).message?.toLowerCase() ?? "";
+    if (ratelimitRemaining === "0" || errorMessage.includes("rate limit")) {
+      code = "RATE_LIMITED";
+      message = "Batas permintaan GitHub tercapai. Coba lagi nanti.";
+    } else {
+      code = "NOT_FOUND_OR_NO_ACCESS";
+      message = "Repo tidak ditemukan, atau token tidak punya akses (cek scope repo dan authorize SSO bila perlu).";
+    }
   }
 
   return { repo, code, message };

@@ -49,11 +49,11 @@ export function PrivateRepoField({
         <div className="pl-8 space-y-3 animate-fade-in">
           <div className="relative">
             <Input
-              label="Fine-grained Personal Access Token"
+              label="Personal Access Token (PAT)"
               type={showToken ? "text" : "password"}
               value={token}
               onChange={(e) => onTokenChange(e.target.value)}
-              placeholder="github_pat_11..."
+              placeholder="ghp_... atau github_pat_..."
               autoComplete="off"
               spellCheck={false}
               id="github-token"
@@ -76,11 +76,14 @@ export function PrivateRepoField({
           </div>
 
           <p className="text-xs text-slate-500 leading-relaxed">
-            Token hanya dipakai untuk satu permintaan ini dan tidak disimpan. Buat fine-grained token dengan izin baca{" "}
-            <span className="font-semibold text-slate-700">Contents</span> dan{" "}
-            <span className="font-semibold text-slate-700">Metadata</span> pada repo yang dibutuhkan.{" "}
+            Token hanya dipakai untuk satu permintaan ini dan tidak disimpan.
+            <br />
+            <span className="font-semibold text-slate-700">Classic token:</span> scope <span className="font-semibold text-slate-700">repo</span> (untuk repo privat). Bila organisasi memakai SSO, token harus di-authorize untuk organisasi itu. Classic dengan scope repo punya akses luas: gunakan masa berlaku pendek dan hapus setelah selesai.
+            <br />
+            <span className="font-semibold text-slate-700">Fine-grained token:</span> izin baca <span className="font-semibold text-slate-700">Contents</span> dan <span className="font-semibold text-slate-700">Metadata</span> pada repo yang dibutuhkan. Hanya berlaku untuk satu pemilik (user/org). Bila repo dari pemilik berbeda, buat token terpisah.
+            <br />
             <a
-              href="https://github.com/settings/tokens?type=beta"
+              href="https://github.com/settings/tokens"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-rose-600 hover:text-rose-700 font-medium underline underline-offset-2"
@@ -90,7 +93,7 @@ export function PrivateRepoField({
           </p>
 
           <p className="text-xs text-slate-500 bg-rose-50 border border-rose-200 rounded-2xl p-3">
-            <span className="font-semibold text-slate-700">Catatan:</span> Fine-grained token hanya berlaku untuk satu pemilik (user/org). Bila repo berasal dari pemilik berbeda, buat token terpisah atau proses satu per satu.
+            <span className="font-semibold text-slate-700">Catatan:</span> Token hanya dipakai untuk satu permintaan dan tidak disimpan.
           </p>
         </div>
       )}

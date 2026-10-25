@@ -5,8 +5,8 @@ const isDev = process.env.NODE_ENV === "development";
 const csp = [
   "default-src 'self'",
   // Next.js hydration requires inline scripts; 'unsafe-inline' is needed for script-src
-  // 'unsafe-eval' is required for Turbopack/Next.js development compilation
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  // 'unsafe-eval' is required for Turbopack/Next.js development compilation only
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'", // Tailwind uses inline styles
   "font-src 'self'",
   "img-src 'self' data:",
@@ -17,6 +17,8 @@ const csp = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  partialPrefetching: true,
   async headers() {
     return [
       {
@@ -29,20 +31,6 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
-  },
-};
-
-export default nextConfig;
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
   },
 };
 

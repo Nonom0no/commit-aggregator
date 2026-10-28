@@ -1,10 +1,9 @@
 import type { CommitsResponse } from "@/types/commit";
 import { formatInTimeZone } from "date-fns-tz";
 import { id } from "date-fns/locale";
+import { groupCommitsByDate, type GroupBy } from "./group-by-date";
 
 const TIMEZONE = "Asia/Jakarta";
-
-type GroupBy = "repo" | "none";
 
 function formatTime(dateStr: string): string {
   const date = new Date(dateStr);
@@ -43,6 +42,15 @@ export function buildMarkdown(response: CommitsResponse, options: { groupBy: Gro
   
   if (sortedCommits.length === 0) {
     return `${title}\n\nBelum ada commit pada rentang ini.`;
+  }
+
+  if (options.groupBy === "date") {
+    const sections = groupCommitsByDate(sortedCommits).map((group) => {
+      const header = `### ${group.label} (${group.commits.length} commit)`;
+      const lines = group.commits.map((c) => formatCommitLine(c, true));
+      return `${header}\n${lines.join("\n")}`;
+    });
+    return `${title}\n\n${sections.join("\n\n")}`;
   }
 
   if (options.groupBy === "none") {

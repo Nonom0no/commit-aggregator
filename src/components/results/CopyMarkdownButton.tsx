@@ -6,10 +6,11 @@ import { Copy, Check, AlertCircle } from "lucide-react";
 import { buildMarkdown } from "@/lib/markdown";
 import { Alert } from "@/components/ui/Alert";
 import type { CommitsResponse } from "@/types/commit";
+import type { GroupBy } from "@/lib/group-by-date";
 
 interface CopyMarkdownButtonProps {
   data: CommitsResponse | null;
-  groupBy: "repo" | "none";
+  groupBy: GroupBy;
   disabled?: boolean;
   className?: string;
 }
